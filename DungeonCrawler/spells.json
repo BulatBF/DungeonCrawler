@@ -1,0 +1,52 @@
+{
+  "firebolt": {
+    "Name": "Огненная стрела",
+    "Description": "Наносит 12 урона и поджигает цель на 2 хода",
+    "Effect": "burn",
+    "DirectDamage": 12,
+    "ManaCost": 20,
+    "Range": 6,
+    "MinLevel": 1,
+    "Findable": false
+  },
+  "poison_dart": {
+    "Name": "Ядовитый дротик",
+    "Description": "Наносит 4 урона и отравляет цель на 3 хода",
+    "Effect": "poison",
+    "DirectDamage": 4,
+    "ManaCost": 9,
+    "Range": 5,
+    "MinLevel": 1,
+    "Findable": false
+  },
+  "heal_self": {
+    "Name": "Самоисцеление",
+    "Description": "Восстанавливает 30 здоровья",
+    "Effect": "heal",
+    "DirectDamage": 0,
+    "ManaCost": 30,
+    "Range": 0,
+    "MinLevel": 1,
+    "Findable": false
+    },
+  "frost_nova": {
+    "Name": "Ледяная вспышка",
+    "Description": "20 урона и замедляет цель",
+    "Effect": "slow",
+    "DirectDamage": 20,
+    "ManaCost": 25,
+    "Range": 4,
+    "MinLevel": 2,
+    "Findable": true
+  },
+  "lightning": {
+    "Name": "Молния",
+    "Description": "35 урона одной цели",
+    "Effect": "none",
+    "DirectDamage": 35,
+    "ManaCost": 30,
+    "Range": 7,
+    "MinLevel": 3,
+    "Findable": true
+  }
+}

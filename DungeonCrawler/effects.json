@@ -1,0 +1,51 @@
+{
+  "heal": {
+    "Name": "Исцеление",
+    "Type": "instant",
+    "Stat": "health",
+    "Value": 30,
+    "Duration": 0
+  },
+  "strength_buff": {
+    "Name": "Сила",
+    "Type": "instant",
+    "Stat": "damage",
+    "Value": 5,
+    "Duration": 0
+    },
+  "teleport": {
+    "Name": "Телепорт",
+    "Type": "instant",
+    "Stat": "teleport",
+    "Value": 0,
+    "Duration": 0
+  },
+  "poison": {
+    "Name": "Яд",
+    "Type": "over_time",
+    "Stat": "health",
+    "Value": -5,
+    "Duration": 3
+  },
+  "burn": {
+    "Name": "Горение",
+    "Type": "over_time",
+    "Stat": "health",
+    "Value": -8,
+    "Duration": 2
+  },
+  "regen": {
+    "Name": "Регенерация",
+    "Type": "over_time",
+    "Stat": "health",
+    "Value": 5,
+    "Duration": 4
+  },
+  "slow": {
+    "Name": "Замедление",
+    "Type": "modifier",
+    "Stat": "speed",
+    "Value": -50,
+    "Duration": 4
+  }
+}

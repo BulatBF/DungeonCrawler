@@ -1,0 +1,48 @@
+{
+  "health_potion": {
+    "Name": "Зелье здоровья",
+    "Description": "Восстанавливает 30 здоровья",
+    "Symbol": "!",
+    "R": 255, "G": 50, "B": 50,
+    "Effect": "heal",
+    "SpawnWeight": 60,
+    "MinLevel": 1
+  },
+  "strength_potion": {
+    "Name": "Зелье силы",
+    "Description": "Увеличивает силу на 5",
+    "Symbol": "!",
+    "R": 255, "G": 165, "B": 0,
+    "Effect": "strength_buff",
+    "SpawnWeight": 25,
+    "MinLevel": 1
+  },
+  "teleport_scroll": {
+    "Name": "Свиток телепорта",
+    "Description": "Телепортирует вас в случайную точку комнаты",
+    "Symbol": "?",
+    "R": 200, "G": 100, "B": 255,
+    "Effect": "teleport",
+    "SpawnWeight": 15,
+    "MinLevel": 1
+  },
+  "poison_vial": {
+    "Name": "Склянка яда",
+    "Description": "Отравляет выпившего",
+    "Symbol": "!",
+    "R": 50, "G": 200, "B": 50,
+    "Effect": "poison",
+    "SpawnWeight": 20,
+    "MinLevel": 1
+  },
+  "spell_scroll": {
+    "Name": "Свиток заклинания",
+    "Description": "Изучить случайное заклинание",
+    "Symbol": "P",
+    "R": 220, "G": 180, "B": 255,
+    "Effect": "none",
+    "TeachesSpell": "random",
+    "SpawnWeight": 12,
+    "MinLevel": 2
+  }
+}

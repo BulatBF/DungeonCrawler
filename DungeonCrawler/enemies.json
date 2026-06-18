@@ -1,0 +1,82 @@
+{
+  "rat": {
+    "Name": "Крыса",
+    "Symbol": "r",
+    "R": 160,
+    "G": 160,
+    "B": 160,
+    "Health": 10,
+    "Damage": 3,
+    "Vision": 3,
+    "Speed": 150,
+    "SpawnWeight": 100,
+    "MinLevel": 1,
+    "ExperienceValue": 10
+  },
+  "ghost": {
+    "Name": "Призрак",
+    "Symbol": "g",
+    "R": 200,
+    "G": 200,
+    "B": 255,
+    "Health": 20,
+    "Damage": 5,
+    "Vision": 5,
+    "Speed": 100,
+    "SpawnWeight": 40,
+    "MinLevel": 1,
+    "ExperienceValue": 20
+  },
+  "ogre": {
+    "Name": "Огр",
+    "Symbol": "O",
+    "R": 255,
+    "G": 50,
+    "B": 50,
+    "Health": 60,
+    "Damage": 15,
+    "Vision": 4,
+    "Speed": 60,
+    "SpawnWeight": 10,
+    "MinLevel": 2,
+    "ExperienceValue": 100
+  },
+  "rat_king": {
+    "Name": "Крысиный король",
+    "Symbol": "R",
+    "R": 200, "G": 100, "B": 100,
+    "Health": 120, "Damage": 12, "Vision": 8, "Speed": 130,
+    "SpawnWeight": 0, "MinLevel": 1,
+    "ExperienceValue": 150,
+    "IsBoss": true
+  },
+  "ogre_chief": {
+    "Name": "Вождь огров",
+    "Symbol": "O",
+    "R": 255, "G": 0, "B": 0,
+    "Health": 250, "Damage": 22, "Vision": 7, "Speed": 80,
+    "SpawnWeight": 0, "MinLevel": 10,
+    "ExperienceValue": 400,
+    "IsBoss": true
+  },
+  "dungeon_lord": {
+    "Name": "Владыка подземелья",
+    "Symbol": "D",
+    "R": 150, "G": 0, "B": 255,
+    "Health": 500, "Damage": 30, "Vision": 10, "Speed": 110,
+    "SpawnWeight": 0, "MinLevel": 20,
+    "ExperienceValue": 1000,
+    "IsBoss": true
+  },
+  "bat":      { "Name": "Летучая мышь", "Symbol": "b", "R": 130, "G": 110, "B": 160, "Health": 12, "Damage": 4,  "Vision": 7, "Speed": 220, "SpawnWeight": 100, "MinLevel": 6,  "ExperienceValue": 15, "Biome": "caves" },
+  "slime":    { "Name": "Слизень",      "Symbol": "s", "R": 80,  "G": 220, "B": 120, "Health": 40, "Damage": 6,  "Vision": 4, "Speed": 60,  "SpawnWeight": 70,  "MinLevel": 6,  "ExperienceValue": 25, "Biome": "caves" },
+  "golem":    { "Name": "Голем",        "Symbol": "G", "R": 150, "G": 140, "B": 120, "Health": 90, "Damage": 14, "Vision": 5, "Speed": 50,  "SpawnWeight": 25,  "MinLevel": 7,  "ExperienceValue": 60, "Biome": "caves" },
+
+  "skeleton": { "Name": "Скелет",       "Symbol": "k", "R": 230, "G": 230, "B": 210, "Health": 35, "Damage": 12, "Vision": 7, "Speed": 110, "SpawnWeight": 100, "MinLevel": 11, "ExperienceValue": 40, "Biome": "catacombs" },
+  "zombie":   { "Name": "Зомби",        "Symbol": "z", "R": 110, "G": 160, "B": 90,  "Health": 70, "Damage": 10, "Vision": 5, "Speed": 60,  "SpawnWeight": 80,  "MinLevel": 11, "ExperienceValue": 45, "Biome": "catacombs" },
+  "necromancer": { "Name": "Некромант", "Symbol": "n", "R": 140, "G": 60,  "B": 200, "Health": 50, "Damage": 18, "Vision": 9, "Speed": 100, "SpawnWeight": 30,  "MinLevel": 12, "ExperienceValue": 90, "Biome": "catacombs" },
+
+  "imp":      { "Name": "Имп",          "Symbol": "i", "R": 255, "G": 120, "B": 60,  "Health": 45, "Damage": 16, "Vision": 8, "Speed": 160, "SpawnWeight": 100, "MinLevel": 16, "ExperienceValue": 70, "Biome": "lair" },
+  "hellhound":{ "Name": "Гончая ада",   "Symbol": "h", "R": 220, "G": 60,  "B": 30,  "Health": 60, "Damage": 20, "Vision": 10,"Speed": 180, "SpawnWeight": 60,  "MinLevel": 16, "ExperienceValue": 100,"Biome": "lair" },
+  "demon":    { "Name": "Демон",        "Symbol": "d", "R": 180, "G": 0,   "B": 60,  "Health": 130,"Damage": 26, "Vision": 8, "Speed": 120, "SpawnWeight": 20,  "MinLevel": 17, "ExperienceValue": 180,"Biome": "lair" }
+}
