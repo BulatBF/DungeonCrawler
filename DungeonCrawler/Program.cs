@@ -106,18 +106,35 @@ namespace RogueLiteGame
                 Raylib.ClearBackground(Color.Black);
                 Raylib.DrawTextEx(logFont, "РЕКОРДЫ", new Vector2(60, 40), 36, 2, Color.Gold);
 
+                // X-координаты колонок
+                float[] cols = { 60, 110, 200, 270, 380, 480 };
+                string[] headers = { "#", "Этаж", "Ур.", "Убийств", "Время", "Дата" };
+
                 if (ScoreSystem.Records.Count == 0)
                     Raylib.DrawTextEx(logFont, "Пока нет записей.", new Vector2(60, 110), 22, 1, Color.Gray);
                 else
                 {
-                    Raylib.DrawTextEx(logFont, "#   Этаж  Ур.  Убийств  Время    Дата",
-                        new Vector2(60, 100), 20, 1, Color.DarkGray);
+                    // Заголовки
+                    for (int c = 0; c < headers.Length; c++)
+                        Raylib.DrawTextEx(logFont, headers[c], new Vector2(cols[c], 100), 20, 1, Color.DarkGray);
+
+                    // Строки
                     for (int i = 0; i < ScoreSystem.Records.Count; i++)
                     {
                         var r = ScoreSystem.Records[i];
-                        string line = $"{i + 1,-3} {r.Floor,-5} {r.Level,-4} {r.Kills,-8} {FormatTime(r.Time),-8} {r.Date}";
-                        Color c = i == 0 ? Color.Gold : Color.White;
-                        Raylib.DrawTextEx(logFont, line, new Vector2(60, 130 + i * 28), 20, 1, c);
+                        float y = 130 + i * 28;
+                        Color col = i == 0 ? Color.Gold : Color.White;
+
+                        string[] cells = {
+                            (i + 1).ToString(),
+                            r.Floor.ToString(),
+                            r.Level.ToString(),
+                            r.Kills.ToString(),
+                            FormatTime(r.Time),
+                            r.Date
+                        };
+                        for (int c = 0; c < cells.Length; c++)
+                            Raylib.DrawTextEx(logFont, cells[c], new Vector2(cols[c], y), 20, 1, col);
                     }
                 }
 
@@ -135,6 +152,7 @@ namespace RogueLiteGame
                 string sub = "Владыка подземелья повержен. [R] - новая игра, [Esc] - меню";
                 Vector2 sz2 = Raylib.MeasureTextEx(logFont, sub, 22, 1);
                 Raylib.DrawTextEx(logFont, sub, new Vector2((Settings.ScreenWidth - sz2.X) / 2f, 300), 22, 1, Color.White);
+                return;
             }
             if (Game.CurrentState == GameState.MainMenu)
             {
