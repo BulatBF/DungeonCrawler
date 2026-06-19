@@ -92,33 +92,11 @@ namespace RogueLiteGame
             }
             if (CurrentState == GameState.MainMenu)
             {
-                if (Raylib.IsKeyPressed(KeyboardKey.One))
-                {
-                    Initialize();
-                    SaveSystem.DeleteSave(); // новая игра затирает старый сейв
-                    return false;
-                }
-                if (Raylib.IsKeyPressed(KeyboardKey.Two) && SaveSystem.SaveExists())
-                {
-                    if (!SaveSystem.Load())
-                        Game.Log("Не удалось загрузить сохранение.");
-                    return false;
-                }
-                if (Raylib.IsKeyPressed(KeyboardKey.Three))
-                {
-                    CurrentState = GameState.Tutorial;
-                    return false;
-                }
-                if (Raylib.IsKeyPressed(KeyboardKey.Four))
-                {
-                    ShouldExit = true;
-                    return false;
-                }
-                if (Raylib.IsKeyPressed(KeyboardKey.Five))
-                {
-                    CurrentState = GameState.Scores;
-                    return false;
-                }
+                if (Raylib.IsKeyPressed(KeyboardKey.One)) StartNewGame();
+                if (Raylib.IsKeyPressed(KeyboardKey.Two) && SaveSystem.SaveExists()) ContinueGame();
+                if (Raylib.IsKeyPressed(KeyboardKey.Three)) OpenTutorial();
+                if (Raylib.IsKeyPressed(KeyboardKey.Four)) OpenScores();
+                if (Raylib.IsKeyPressed(KeyboardKey.Five)) QuitGame();
                 return false;
             }
 
@@ -1115,5 +1093,17 @@ namespace RogueLiteGame
             RunElapsedTime = (float)Raylib.GetTime() - RunStartTime;
             ScoreSystem.RecordRun(DungeonLevel, EnemiesKilled, Player.Level, RunElapsedTime);
         }
+        public static void StartNewGame()
+        {
+            Initialize();
+            SaveSystem.DeleteSave();
+        }
+        public static void ContinueGame()
+        {
+            if (!SaveSystem.Load()) Game.Log("Не удалось загрузить.");
+        }
+        public static void OpenTutorial() => CurrentState = GameState.Tutorial;
+        public static void OpenScores() => CurrentState = GameState.Scores;
+        public static void QuitGame() => ShouldExit = true;
     }
 }

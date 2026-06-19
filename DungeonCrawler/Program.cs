@@ -139,36 +139,38 @@ namespace RogueLiteGame
             if (Game.CurrentState == GameState.MainMenu)
             {
                 Raylib.ClearBackground(Color.Black);
+
                 string title = "DUNGEON CRAWLER";
-                float titleFontSize = 50;
-                Vector2 titleSize = Raylib.MeasureTextEx(logFont, title, titleFontSize, 2);
-                float titleX = (Settings.ScreenWidth - titleSize.X) / 2f;
-                Raylib.DrawTextEx(logFont, title, new Vector2(titleX, 120), titleFontSize, 2, Color.Gold);
+                Vector2 tsz = Raylib.MeasureTextEx(logFont, title, 50, 2);
+                float cx = Settings.ScreenWidth / 2f;
+                Raylib.DrawTextEx(logFont, title, new Vector2(cx - tsz.X / 2f, 100), 50, 2, Color.Gold);
 
-                Raylib.DrawTextEx(logFont, $"v{Settings.Version}",
-                    new Vector2(Settings.ScreenWidth / 2 - 20, 180), 18, 1, Color.Gray);
+                float y = 250;
+                float step = 55;
 
-                List<string> options = new() { "[1] Новая игра" };
-                List<Color> colors = new() { Color.SkyBlue };
+                if (MenuButton("Новая игра", cx, y, 28, Color.SkyBlue))
+                    Game.StartNewGame();
+                y += step;
+
                 if (SaveSystem.SaveExists())
                 {
-                    options.Add("[2] Продолжить");
-                    colors.Add(Color.Lime);
+                    if (MenuButton("Продолжить", cx, y, 28, Color.Lime))
+                        Game.ContinueGame();
+                    y += step;
                 }
-                options.Add("[3] Как играть");
-                colors.Add(Color.Yellow);
-                options.Add("[4] Выход");
-                colors.Add(Color.Orange);
-                options.Add("[5] Рекорды");
-                colors.Add(Color.Violet);
 
-                for (int i = 0; i < options.Count; i++)
-                {
-                    Vector2 sz = Raylib.MeasureTextEx(logFont, options[i], 28, 1);
-                    Raylib.DrawTextEx(logFont, options[i],
-                        new Vector2((Settings.ScreenWidth - sz.X) / 2f, 280 + i * 50), 28, 1, colors[i]);
-                }
-                return; // больше ничего не рисуем
+                if (MenuButton("Как играть", cx, y, 28, Color.Yellow))
+                    Game.OpenTutorial();
+                y += step;
+
+                if (MenuButton("Рекорды", cx, y, 28, Color.Violet))
+                    Game.OpenScores();
+                y += step;
+
+                if (MenuButton("Выход", cx, y, 28, Color.Orange))
+                    Game.QuitGame();
+
+                return;
             }
 
             // === ОБУЧЕНИЕ ===
@@ -523,6 +525,32 @@ namespace RogueLiteGame
             int m = total / 60;
             int s = total % 60;
             return $"{m:D2}:{s:D2}";
+        }
+        // Рисует кнопку по центру, возвращает true если по ней кликнули
+        static bool MenuButton(string text, float centerX, float y, float fontSize, Color baseColor)
+        {
+            Vector2 sz = Raylib.MeasureTextEx(logFont, text, fontSize, 1);
+            float x = centerX - sz.X / 2f;
+
+            // Прямоугольник кнопки с небольшими отступами
+            float padX = 16, padY = 8;
+            Rectangle rect = new Rectangle(x - padX, y - padY, sz.X + padX * 2, sz.Y + padY * 2);
+
+            Vector2 mouse = Raylib.GetMousePosition();
+            bool hovered = Raylib.CheckCollisionPointRec(mouse, rect);
+            bool clicked = hovered && Raylib.IsMouseButtonPressed(MouseButton.Left);
+
+            // Фон при наведении
+            if (hovered)
+            {
+                Raylib.DrawRectangleRec(rect, new Color(60, 60, 80, 180));
+                Raylib.DrawRectangleLinesEx(rect, 2, baseColor);
+            }
+
+            Color textColor = hovered ? Color.White : baseColor;
+            Raylib.DrawTextEx(logFont, text, new Vector2(x, y), fontSize, 1, textColor);
+
+            return clicked;
         }
     }
 }
