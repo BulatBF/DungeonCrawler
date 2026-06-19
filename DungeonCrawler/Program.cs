@@ -56,6 +56,7 @@ namespace RogueLiteGame
 
             TextureLibrary.LoadAll();
             Game.InitLibraries();
+            ScoreSystem.Load();
 
             while (!Raylib.WindowShouldClose() && !Game.ShouldExit)
             {
@@ -100,12 +101,37 @@ namespace RogueLiteGame
 
         static void DrawGame()
         {
+            if (Game.CurrentState == GameState.Scores)
+            {
+                Raylib.ClearBackground(Color.Black);
+                Raylib.DrawTextEx(logFont, "РЕКОРДЫ", new Vector2(60, 40), 36, 2, Color.Gold);
+
+                if (ScoreSystem.Records.Count == 0)
+                    Raylib.DrawTextEx(logFont, "Пока нет записей.", new Vector2(60, 110), 22, 1, Color.Gray);
+                else
+                {
+                    Raylib.DrawTextEx(logFont, "#   Этаж  Ур.  Убийств  Время    Дата",
+                        new Vector2(60, 100), 20, 1, Color.DarkGray);
+                    for (int i = 0; i < ScoreSystem.Records.Count; i++)
+                    {
+                        var r = ScoreSystem.Records[i];
+                        string line = $"{i + 1,-3} {r.Floor,-5} {r.Level,-4} {r.Kills,-8} {FormatTime(r.Time),-8} {r.Date}";
+                        Color c = i == 0 ? Color.Gold : Color.White;
+                        Raylib.DrawTextEx(logFont, line, new Vector2(60, 130 + i * 28), 20, 1, c);
+                    }
+                }
+
+                Raylib.DrawTextEx(logFont, "[Esc] Назад    [Delete] Сбросить рекорды",
+                    new Vector2(60, Settings.ScreenHeight - 50), 20, 1, Color.Orange);
+                return;
+            }
             if (Game.CurrentState == GameState.Victory)
             {
                 Raylib.DrawRectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight, new Color(0, 0, 0, 230));
                 string t = "ПОБЕДА!";
-                Vector2 sz = Raylib.MeasureTextEx(gameFont, t, 60, 2);
-                Raylib.DrawTextEx(gameFont, t, new Vector2((Settings.ScreenWidth - sz.X) / 2f, 200), 60, 2, Color.Gold);
+                Vector2 sz = Raylib.MeasureTextEx(logFont, t, 50, 2);
+                Raylib.DrawTextEx(logFont, t, new Vector2((Settings.ScreenWidth - sz.X) / 2f, 100), 50, 2, Color.Gold);
+                DrawRunStats(190);
                 string sub = "Владыка подземелья повержен. [R] - новая игра, [Esc] - меню";
                 Vector2 sz2 = Raylib.MeasureTextEx(logFont, sub, 22, 1);
                 Raylib.DrawTextEx(logFont, sub, new Vector2((Settings.ScreenWidth - sz2.X) / 2f, 300), 22, 1, Color.White);
@@ -117,7 +143,7 @@ namespace RogueLiteGame
                 float titleFontSize = 50;
                 Vector2 titleSize = Raylib.MeasureTextEx(logFont, title, titleFontSize, 2);
                 float titleX = (Settings.ScreenWidth - titleSize.X) / 2f;
-                Raylib.DrawTextEx(gameFont, title, new Vector2(titleX, 120), titleFontSize, 2, Color.Gold);
+                Raylib.DrawTextEx(logFont, title, new Vector2(titleX, 120), titleFontSize, 2, Color.Gold);
 
                 Raylib.DrawTextEx(logFont, $"v{Settings.Version}",
                     new Vector2(Settings.ScreenWidth / 2 - 20, 180), 18, 1, Color.Gray);
@@ -133,6 +159,8 @@ namespace RogueLiteGame
                 colors.Add(Color.Yellow);
                 options.Add("[4] Выход");
                 colors.Add(Color.Orange);
+                options.Add("[5] Рекорды");
+                colors.Add(Color.Violet);
 
                 for (int i = 0; i < options.Count; i++)
                 {
@@ -321,20 +349,16 @@ namespace RogueLiteGame
 
             if (Game.CurrentState == GameState.GameOver)
             {
-                // Затемнение экрана
-                Raylib.DrawRectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight, new Color(0, 0, 0, 200));
-                
-                string mainText = "ИГРА ОКОНЧЕНА";
-                string subText = "Нажмите [R] для перезапуска";
+                Raylib.DrawRectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight, new Color(0, 0, 0, 230));
+                string t = "ВЫ ПОГИБЛИ";
+                Vector2 sz = Raylib.MeasureTextEx(logFont, t, 50, 2);
+                Raylib.DrawTextEx(logFont, t, new Vector2((Settings.ScreenWidth - sz.X) / 2f, 100), 50, 2, Color.Red);
 
-                Vector2 mainSize = Raylib.MeasureTextEx(logFont, mainText, 40, 1);
-                Vector2 subSize = Raylib.MeasureTextEx(logFont, subText, 25, 1);
+                DrawRunStats(190);
 
-                Vector2 mainPos = new Vector2(Settings.ScreenWidth / 2 - mainSize.X / 2, Settings.ScreenHeight / 2 - 50);
-                Vector2 subPos = new Vector2(Settings.ScreenWidth / 2 - subSize.X / 2, Settings.ScreenHeight / 2 + 10);
-                
-                Raylib.DrawTextEx(logFont, mainText, mainPos, 40, 1, Color.Red);
-                Raylib.DrawTextEx(logFont, subText, subPos, 25, 1, Color.White);
+                string hint = "[R] - новая игра, [Esc] - меню, [T] - рекорды";
+                Vector2 hsz = Raylib.MeasureTextEx(logFont, hint, 20, 1);
+                Raylib.DrawTextEx(logFont, hint, new Vector2((Settings.ScreenWidth - hsz.X) / 2f, 340), 20, 1, Color.Gray);
             }
             if (Game.CurrentState == GameState.LevelUp)
             {
@@ -475,6 +499,30 @@ namespace RogueLiteGame
             Raylib.DrawTextEx(logFont, line1, new Vector2(px + pad, py + pad), fontSize, 1, item.ItemColor);
             Raylib.DrawTextEx(logFont, line2, new Vector2(px + pad, py + pad + fontSize + 2), fontSize, 1, Color.White);
             Raylib.DrawTextEx(logFont, line3, new Vector2(px + pad, py + pad + (fontSize + 2) * 2), fontSize, 1, Color.Gray);
+        }
+        static void DrawRunStats(int topY)
+        {
+            string time = FormatTime(Game.RunElapsedTime);
+            string[] stats = {
+                $"Этаж: {Game.DungeonLevel}",
+                $"Уровень: {Game.Player.Level}",
+                $"Убийств: {Game.EnemiesKilled}",
+                $"Время: {time}",
+            };
+            for (int i = 0; i < stats.Length; i++)
+            {
+                Vector2 sz = Raylib.MeasureTextEx(logFont, stats[i], 22, 1);
+                Raylib.DrawTextEx(logFont, stats[i],
+                    new Vector2((Settings.ScreenWidth - sz.X) / 2f, topY + i * 30), 22, 1, Color.White);
+            }
+        }
+
+        static string FormatTime(float seconds)
+        {
+            int total = (int)seconds;
+            int m = total / 60;
+            int s = total % 60;
+            return $"{m:D2}:{s:D2}";
         }
     }
 }

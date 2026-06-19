@@ -5,7 +5,7 @@ using Raylib_cs;
 
 namespace RogueLiteGame
 {
-    public enum GameState { MainMenu, Playing, GameOver, Victory, Console, Map, LevelUp, Tutorial, Targeting, LearnSpell }
+    public enum GameState { MainMenu, Playing, GameOver, Victory, Console, Map, LevelUp, Tutorial, Targeting, LearnSpell, Scores }
     public static class Game
     {
         public static Room[,] World = new Room[Settings.WorldSize, Settings.WorldSize];
@@ -27,6 +27,10 @@ namespace RogueLiteGame
         public static int TargetIndex = 0;             // индекс выбранного врага
         public static List<Enemy> ValidTargets = new(); // враги в радиусе
         public static Spell? PendingSpell = null;
+        public static int EnemiesKilled = 0;
+        public static int ItemsCollected = 0;
+        public static float RunStartTime = 0f;   // время старта забега (сек)
+        public static float RunElapsedTime = 0f; // итоговое время забега
         public static string CurrentBiome => DungeonLevel switch
         {
             <= 5  => "dungeon",
@@ -42,6 +46,10 @@ namespace RogueLiteGame
             Messages.Clear();
 
             Player.ResetStats();
+            EnemiesKilled = 0;
+            ItemsCollected = 0;
+            RunStartTime = (float)Raylib.GetTime();
+            RunElapsedTime = 0f;
 
             MapGenerator.GenerateWorld(World, Settings.WorldSize);
 
@@ -71,6 +79,17 @@ namespace RogueLiteGame
 
         public static bool HandleInput()
         {
+            if (CurrentState == GameState.Scores)
+            {
+                if (Raylib.IsKeyPressed(KeyboardKey.Escape))
+                    CurrentState = GameState.MainMenu;
+                if (Raylib.IsKeyPressed(KeyboardKey.Delete))
+                {
+                    ScoreSystem.Reset();
+                    Game.Log("Рекорды сброшены.");
+                }
+                return false;
+            }
             if (CurrentState == GameState.MainMenu)
             {
                 if (Raylib.IsKeyPressed(KeyboardKey.One))
@@ -93,6 +112,11 @@ namespace RogueLiteGame
                 if (Raylib.IsKeyPressed(KeyboardKey.Four))
                 {
                     ShouldExit = true;
+                    return false;
+                }
+                if (Raylib.IsKeyPressed(KeyboardKey.Five))
+                {
+                    CurrentState = GameState.Scores;
                     return false;
                 }
                 return false;
@@ -186,6 +210,25 @@ namespace RogueLiteGame
                 }
                 return false; // Пока мы в меню LevelUp, обычный ввод заблокирован
             }
+            if (CurrentState == GameState.GameOver || CurrentState == GameState.Victory)
+            {
+                if (Raylib.IsKeyPressed(KeyboardKey.R))
+                {
+                    Initialize();        // новая игра
+                    return false;
+                }
+                if (Raylib.IsKeyPressed(KeyboardKey.Escape))
+                {
+                    CurrentState = GameState.MainMenu;
+                    return false;
+                }
+                if (Raylib.IsKeyPressed(KeyboardKey.T))   // ← показать рекорды
+                {
+                    CurrentState = GameState.Scores;
+                    return false;
+                }
+                return false;
+            }
             if (Raylib.IsKeyPressed(KeyboardKey.Grave))
             {
                 CurrentState = (CurrentState == GameState.Console) ? GameState.Playing : GameState.Console;
@@ -255,6 +298,7 @@ namespace RogueLiteGame
                         Player.Inventory.Add(item);
                         currentRoom.Items.Remove(item);
                         Game.Log($"Вы подобрали: {item.Name}");
+                        ItemsCollected++;
                     }
                     else
                     {
@@ -511,6 +555,7 @@ namespace RogueLiteGame
                 Player.Health = 0;
                 CurrentState = GameState.GameOver;
                 SaveSystem.DeleteSave();
+                EndRun();
                 return;
             }
             Room room = GetCurrentRoom();
@@ -538,6 +583,7 @@ namespace RogueLiteGame
                     Player.Health = 0;
                     CurrentState = GameState.GameOver;
                     SaveSystem.DeleteSave();
+                    EndRun();
                     return;
                 }
             }
@@ -560,6 +606,7 @@ namespace RogueLiteGame
                 Player.Health = 0;
                 CurrentState = GameState.GameOver;
                 SaveSystem.DeleteSave();
+                EndRun();
                 return;
             }
 
@@ -577,6 +624,7 @@ namespace RogueLiteGame
                             // Финальный босс — победа!
                             CurrentState = GameState.Victory;
                             SaveSystem.DeleteSave();
+                            EndRun();
                         }
                         else
                         {
@@ -585,6 +633,7 @@ namespace RogueLiteGame
                             Game.Log("Путь вниз открыт!");
                         }
                     }
+                    EnemiesKilled++;
                 }
             }
             room.Enemies.RemoveAll(e => e.Health <= 0);
@@ -1018,6 +1067,7 @@ namespace RogueLiteGame
                     {
                         CurrentState = GameState.Victory;
                         SaveSystem.DeleteSave();
+                        EndRun();
                     }
                     else
                     {
@@ -1025,6 +1075,7 @@ namespace RogueLiteGame
                         Game.Log("Путь вниз открыт!");
                     }
                 }
+                EnemiesKilled++;
 
                 room.Enemies.Remove(enemy);
                 if (Player.Experience >= Player.ExperienceToNextLevel && CurrentState == GameState.Playing)
@@ -1058,6 +1109,11 @@ namespace RogueLiteGame
             ItemLibrary.Initialize();
             EffectLibrary.Initialize();
             SpellLibrary.Initialize();
+        }
+        public static void EndRun()
+        {
+            RunElapsedTime = (float)Raylib.GetTime() - RunStartTime;
+            ScoreSystem.RecordRun(DungeonLevel, EnemiesKilled, Player.Level, RunElapsedTime);
         }
     }
 }
