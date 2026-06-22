@@ -265,6 +265,9 @@ namespace RogueLiteGame
             else if (Raylib.IsKeyDown(KeyboardKey.A)) dirX = -1;
             else if (Raylib.IsKeyDown(KeyboardKey.D)) dirX = 1;
             
+            if (dirX < 0) Player.FacingLeft = false;
+            else if (dirX > 0) Player.FacingLeft = true;
+            
             if (Raylib.IsKeyPressed(KeyboardKey.G))
             {
                 Room currentRoom = GetCurrentRoom();
@@ -687,6 +690,8 @@ namespace RogueLiteGame
                     else dy = rnd.Next(-1, 2);
                 }
             }
+            if (dx < 0) e.FacingLeft = false;
+            else if (dx > 0) e.FacingLeft = true;
 
             int nX = e.X + dx;
             int nY = e.Y + dy;

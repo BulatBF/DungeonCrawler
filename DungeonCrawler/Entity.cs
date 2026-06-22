@@ -18,6 +18,7 @@ namespace RogueLiteGame
         public int Energy { get; set; }
         public string TextureKey { get; set; } = "";
         public List<ActiveEffect> ActiveEffects { get; set; } = new List<ActiveEffect>();
+        public bool FacingLeft { get; set; } = false;
 
         public Entity(int x, int y, char symbol, Color color, int health, int damage, int vision, int speed, string name = "?")
         {

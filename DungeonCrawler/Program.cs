@@ -261,7 +261,7 @@ namespace RogueLiteGame
                     DrawTile(item.Key, item.X, item.Y);
             foreach (var e in room.Enemies)
                 if (room.VisibleNow[e.X, e.Y])
-                    DrawTile(e.TextureKey, e.X, e.Y);
+                    DrawTile(e.TextureKey, e.X, e.Y, e.FacingLeft);
             Enemy? boss = room.Enemies.Find(e => e.IsBoss && room.VisibleNow[e.X, e.Y]);
             if (boss != null)
             {
@@ -276,7 +276,7 @@ namespace RogueLiteGame
                 Raylib.DrawTextEx(logFont, bn, new Vector2(bx + (barW - bsz.X) / 2f, 9), 16, 1, Color.White);
             }
 
-            DrawTile("player", Game.Player.X, Game.Player.Y);
+            DrawTile("player", Game.Player.X, Game.Player.Y, Game.Player.FacingLeft);
             
             int gameW = Settings.MapWidth * Settings.CellWidth;
             int gameH = Settings.MapHeight * Settings.CellHeight;
@@ -481,13 +481,17 @@ namespace RogueLiteGame
                 }
             }
         }
-        static void DrawTile(string key, int cellX, int cellY)
+        static void DrawTile(string key, int cellX, int cellY, bool flipX = false)
         {
             Texture2D tex = TextureLibrary.Get(key);
-            Rectangle source = new Rectangle(0, 0, tex.Width, tex.Height);
+
+            // Отрицательная ширина source отражает спрайт по горизонтали
+            Rectangle source = new Rectangle(0, 0, flipX ? -tex.Width : tex.Width, tex.Height);
+
             Rectangle dest = new Rectangle(
                 cellX * Settings.CellWidth, cellY * Settings.CellHeight,
                 Settings.CellWidth, Settings.CellHeight);
+
             Raylib.DrawTexturePro(tex, source, dest, Vector2.Zero, 0, Color.White);
         }
         static void DrawItemTooltip(Item item)
